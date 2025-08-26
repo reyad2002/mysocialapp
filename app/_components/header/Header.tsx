@@ -9,7 +9,7 @@ import {
 import { IoShareSocial } from "react-icons/io5";
 import Link from "next/link";
 import { useContext } from "react";
-import { authContext } from "@/app/authContext/authContext";
+import { authContext } from "../../authContext/authContext";
 import { useRouter } from "next/navigation";
 
 export default function Header() {
