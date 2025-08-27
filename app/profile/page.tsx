@@ -19,7 +19,7 @@ const Page = () => {
               alt={userData?.name}
               className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover shadow"
             />
-            <h2 className="mt-4 font-semibold text-lg text-center">
+            <h2 className="mt-4 font-semibold text-lg text-center text-gray-900">
               {userData?.name || "User Name"}
             </h2>
             <p className="text-sm text-gray-500 text-center mt-1">
@@ -34,15 +34,15 @@ const Page = () => {
           {/* Right Side - User Information */}
           <div className="w-full md:w-1/2 bg-white shadow-md rounded-2xl p-6 border">
             <div className="flex justify-between items-center mb-6 flex-wrap gap-3">
-              <h3 className="text-lg font-semibold">User Information</h3>
+              <h3 className="text-lg font-semibold text-blue-950">User Information</h3>
               <button className="px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium cursor-pointer">
                 Edit
               </button>
             </div>
 
             <div className="space-y-4 text-sm sm:text-base">
-              <InfoItem label="Name" value={userData?.name} />
-              <InfoItem label="E-Mail" value={userData?.email} icon={<Mail size={16} className="text-gray-500" />} />
+              <InfoItem  label="Name" value={userData?.name} />
+              <InfoItem label="E-Mail" value={userData?.email}  />
               <InfoItem label="Gender" value={userData?.gender} />
               <InfoItem label="ID" value={userData?._id} />
               <InfoItem label="Date Of Birth" value={userData?.dateOfBirth} />
@@ -65,10 +65,10 @@ const Page = () => {
 };
 
 const InfoItem = ({ label, value, icon }: { label: string; value?: string; icon?: React.ReactNode }) => (
-  <div className="flex items-start gap-2">
+  <div className="flex items-start gap-2 text-gray-700">
     {icon && <span>{icon}</span>}
     <div>
-      <p className="text-sm text-gray-500">{label}</p>
+      <p className="text-sm text-gray-800 ">{label}</p>
       <p className="font-medium break-words">{value || "—"}</p>
     </div>
   </div>
