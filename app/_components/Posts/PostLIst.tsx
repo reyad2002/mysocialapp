@@ -1,3 +1,4 @@
+"use client";
 import React, { useContext, useEffect, useState } from "react";
 import PostItems from "./PostItems";
 import axios from "axios";

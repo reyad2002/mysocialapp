@@ -1,31 +1,37 @@
 "use client";
-import React, { useContext, useState, useRef } from "react";
+import React, { useContext } from "react";
 import { authContext } from "../../authContext/authContext";
-import Post from "../Posts/PostItems";
 import PostLIst from "../Posts/PostLIst";
+import { useForm } from "react-hook-form";
+import axios from "axios";
 
 export default function HomePage() {
   const { userData } = useContext<any>(authContext);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { register, handleSubmit } = useForm();
 
-  const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setSelectedImage(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  async function onSubmit(formValues: any) {
+    const formData = new FormData();
+    // ❌ formData.append("content", formValues.content);
+    // ✅ API متوقع body بدل content
+    formData.append("body", formValues.content);
+    formData.append("image", formValues.image[0]);
 
-  const handleImageRemove = () => {
-    setSelectedImage(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("Missing token");
+
+      const { data: response } = await axios.post(
+        "https://linked-posts.routemisr.com/posts",
+        formData,
+        {
+          headers: { token }, // نفس الهيدر اللي كنت بتستخدمه
+        }
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error);
     }
-  };
+  }
 
   return (
     <div className="min-h-screen bg-slate-900">
@@ -43,7 +49,9 @@ export default function HomePage() {
                 alt="profile"
                 className="w-16 h-16 rounded-full"
               />
-              <p className="mt-2 font-medium text-slate-200">{userData?.name}</p>
+              <p className="mt-2 font-medium text-slate-200">
+                {userData?.name}
+              </p>
               <span className="text-sm text-slate-400">Web Developer</span>
             </div>
           </div>
@@ -72,71 +80,52 @@ export default function HomePage() {
         {/* Feed */}
         <section className="md:col-span-2">
           {/* Create Post */}
-          <div className="bg-slate-800 rounded-xl shadow p-4 mb-6">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="bg-slate-800 rounded-xl shadow p-4 mb-6"
+          >
             <textarea
+              {...register("content")}
               placeholder="What's on your mind?"
               className="w-full p-3 border border-slate-600 bg-slate-700 text-slate-200 rounded-lg focus:outline-none focus:ring focus:ring-blue-400"
             />
-
-            {/* Image Preview */}
-            {selectedImage && (
-              <div className="mt-3 relative">
-                <img
-                  src={selectedImage}
-                  alt="Selected"
-                  className="w-full max-h-64 object-cover rounded-lg"
-                />
-                <button
-                  onClick={handleImageRemove}
-                  className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600"
+            <input
+              type="file"
+              {...register("image")}
+              className="hidden"
+              id="image-upload"
+            />
+            <div className="createControlers flex justify-between items-center ">
+              <label
+                htmlFor="image-upload"
+                className="flex items-center gap-2 text-slate-300 hover:text-blue-400 cursor-pointer"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  ×
-                </button>
-              </div>
-            )}
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+                Photo
+              </label>
 
-            {/* Action Buttons */}
-            <div className="mt-3 flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={handleImageSelect}
-                  accept="image/*"
-                  className="hidden"
-                  id="image-upload"
-                />
-                <label
-                  htmlFor="image-upload"
-                  className="flex items-center gap-2 text-slate-300 hover:text-blue-400 cursor-pointer"
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
-                  Photo
-                </label>
-              </div>
               <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500">
                 Post
               </button>
             </div>
-          </div>
+          </form>
 
           {/* Example Post */}
           <div className="posts">
-           <PostLIst/>
+            <PostLIst />
           </div>
-
         </section>
 
         {/* Right Sidebar */}

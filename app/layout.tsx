@@ -1,10 +1,8 @@
-"use client";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "./_components/header/Header";
 import Footer from "./_components/footer/Footer";
-import { usePathname } from "next/navigation";
 import AuthProvider from "./authContext/authContext";
 
 const geistSans = Geist({
@@ -27,20 +25,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const pathname = usePathname();
-  const hiddenLayout = ["/login", "/register"];
-  const shouldHideLayout = hiddenLayout.includes(pathname);
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/* {!shouldHideLayout && <Header />} */}
         <AuthProvider>
           <Header />
           {children}
           <Footer />
-          {/* {!shouldHideLayout &&  <Footer />} */}
         </AuthProvider>
       </body>
     </html>
