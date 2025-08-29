@@ -1,8 +1,8 @@
 "use client";
-import React, { useContext, useEffect } from "react";
+// import React, { useContext, useEffect } from "react";
 import HomePage from "./_components/homePage/HomePage";
-import { authContext } from "./authContext/authContext";
-import { useRouter } from "next/navigation";
+// import { authContext } from "./authContext/authContext";
+// import { useRouter } from "next/navigation";
 import ProtectedLayout from "./_components/ProtectedLayout/page";
 
 const page = () => {

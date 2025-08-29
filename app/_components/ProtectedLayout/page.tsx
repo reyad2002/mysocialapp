@@ -18,10 +18,5 @@ export default function ProtectedLayout({
     }
   }, [token, router]);
 
-  //   if (!token) {
-
-  //     return <div className="text-center mt-10">Redirecting...</div>;
-  //   }
-
   return <>{children}</>;
 }
